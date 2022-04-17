@@ -3,6 +3,7 @@ pragma solidity ^0.8.4;
 
 import "../ERC/ERC-721/ERC721.sol";
 import "../ERC/ERC-721/extensions/ERC721Burnable.sol";
+import "../ERC/ERC-721/extensions/ERC721URIStorage.sol";
 import "../ERC/security/Pausable.sol";
 import "../ERC/access/Ownable.sol";
 import "../ERC/utils/Counters.sol";
