@@ -39,7 +39,7 @@ contract PotterToken is ERC721, ERC721URIStorage, Pausable, Ownable, ERC721Burna
         return existingUris[uri] == 1;
     }
 
-    function payToMint(address payable recipient, string memory metaDataUri) public payable returns(uint256) {
+    function payToMint(address payable recipient, string memory metaDataUri) public payable whenNotPaused returns(uint256) {
         require(existingUris[metaDataUri] != 1, "NFT already minted");
         require(msg.value >= 0.05 ether, "NFT costs at least 0.05 ether");
 
