@@ -10,8 +10,9 @@ import "../ERC/utils/Counters.sol";
 
 contract PotterToken is ERC721, ERC721URIStorage, Pausable, Ownable, ERC721Burnable {
     using Counters for Counters.Counter;
-
     Counters.Counter private _tokenIdCounter;
+
+    mapping(string => uint) existingUris;
 
     constructor() ERC721("PotterToken", "PT") {}
 
@@ -32,6 +33,28 @@ contract PotterToken is ERC721, ERC721URIStorage, Pausable, Ownable, ERC721Burna
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
+    }
+
+    function isContentOwned(string memory uri) public view returns(bool) {
+        return existingUris[uri] == 1;
+    }
+
+    function payToMint(address payable recipient, string memory metaDataUri) public payable returns(uint256) {
+        require(existingUris[metaDataUri] != 1, "NFT already minted");
+        require(msg.value >= 0.05 ether, "NFT costs at least 0.05 ether");
+
+        uint256 newItemId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        existingUris[metaDataUri] = 1;
+
+        _mint(recipient, newItemId);
+        _setTokenURI(newItemId, metaDataUri);
+
+        return newItemId;
+    }
+
+    function count() public view returns (uint256) {
+        return _tokenIdCounter.current();
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
